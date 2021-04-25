@@ -32,4 +32,5 @@
     <string name="button_crop">Изменить размер</string>
     <string name="button_rotate">Повернуть</string>
     <string name="button_pip">Картинка в картинке</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
