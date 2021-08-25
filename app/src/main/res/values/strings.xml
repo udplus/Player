@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Just Player</string>
+    <string name="app_name" translatable="false">Just Player</string>
 
     <string name="video_resize_fit">Fit</string>
     <string name="video_resize_crop">Crop</string>
@@ -15,5 +16,8 @@
     <string name="error_details">Details</string>
     <string name="error_files_missing">Files app is disabled or missing</string>
 
-    <string name="subtitles_scope">To automatically load external subtitles, grant %s access to the topmost folder containing your videos (e.g. Movies).</string>
+    <string name="request_scope">To automatically load external subtitles or enable skipping to next file in a directory, grant %s access to the topmost folder containing your videos (e.g. Movies).</string>
+
+    <string name="delete_query">Delete this file\?</string>
+    <string name="delete_confirmation">Delete</string>
 </resources>

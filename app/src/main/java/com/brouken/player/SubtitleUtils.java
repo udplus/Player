@@ -1,5 +1,6 @@
 package com.brouken.player;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class SubtitleUtils {
@@ -95,6 +97,8 @@ class SubtitleUtils {
     }
 
     public static DocumentFile findDocInScope(DocumentFile scope, DocumentFile doc) {
+        if (doc == null || scope == null)
+            return null;
         for (DocumentFile file : scope.listFiles()) {
             if (file.isDirectory()) {
                 final DocumentFile ret = findDocInScope(file, doc);
@@ -103,7 +107,12 @@ class SubtitleUtils {
             } else {
                 //if (doc.length() == file.length() && doc.lastModified() == file.lastModified() && doc.getName().equals(file.getName())) {
                 // lastModified is zero when opened from Solid Explorer
-                if (doc.length() == file.length() && doc.getName().equals(file.getName())) {
+                final String docName = doc.getName();
+                final String fileName = file.getName();
+                if (docName == null || fileName == null) {
+                    continue;
+                }
+                if (doc.length() == file.length() && docName.equals(fileName)) {
                     return file;
                 }
             }
@@ -111,14 +120,24 @@ class SubtitleUtils {
         return null;
     }
 
-    public static String[] getTrailFromUri(Uri uri) {
+    public static String getTrailPathFromUri(Uri uri) {
         String path = uri.getPath();
         String[] array = path.split(":");
         if (array.length > 1) {
-            path = array[1];
-            return path.split("/");
+            return array[array.length - 1];
+        } else {
+            return path;
         }
-        return new String[]{};
+    }
+
+    public static String[] getTrailFromUri(Uri uri) {
+        if ("org.courville.nova.provider".equals(uri.getHost()) && ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            String path = uri.getPath();
+            if (path.startsWith("/external_files/")) {
+                return path.substring("/external_files/".length()).split("/");
+            }
+        }
+        return getTrailPathFromUri(uri).split("/");
     }
 
     private static String getFileBaseName(String name) {
@@ -129,6 +148,10 @@ class SubtitleUtils {
 
     public static DocumentFile findSubtitle(DocumentFile video) {
         DocumentFile dir = video.getParentFile();
+        return findSubtitle(video, dir);
+    }
+
+    public static DocumentFile findSubtitle(DocumentFile video, DocumentFile dir) {
         String videoName = getFileBaseName(video.getName());
         int videoFiles = 0;
 
@@ -138,6 +161,8 @@ class SubtitleUtils {
         List<DocumentFile> candidates = new ArrayList<>();
 
         for (DocumentFile file : dir.listFiles()) {
+            if (file.getName().startsWith("."))
+                continue;
             if (isSubtitleFile(file))
                 candidates.add(file);
             if (isVideoFile(file))
@@ -152,6 +177,31 @@ class SubtitleUtils {
             for (DocumentFile candidate : candidates) {
                 if (candidate.getName().startsWith(videoName + '.')) {
                     return candidate;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static DocumentFile findNext(DocumentFile video) {
+        DocumentFile dir = video.getParentFile();
+        return findNext(video, dir);
+    }
+
+    public static DocumentFile findNext(DocumentFile video, DocumentFile dir) {
+        DocumentFile list[] = dir.listFiles();
+        Arrays.sort(list, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+
+        final String videoName = video.getName();
+        boolean matchFound = false;
+
+        for (DocumentFile file : list) {
+            if (file.getName().equals(videoName)) {
+                matchFound = true;
+            } else if (matchFound) {
+                if (isVideoFile(file)) {
+                    return file;
                 }
             }
         }

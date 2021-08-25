@@ -1,25 +1,50 @@
 package com.brouken.player;
 
+import static android.content.Context.UI_MODE_SERVICE;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.UiModeManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.util.Rational;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.documentfile.provider.DocumentFile;
+
+import com.arthenica.ffmpegkit.FFmpegKitConfig;
+import com.arthenica.ffmpegkit.FFprobeKit;
+import com.arthenica.ffmpegkit.MediaInformation;
+import com.arthenica.ffmpegkit.MediaInformationSession;
+import com.arthenica.ffmpegkit.StreamInformation;
 import com.google.android.exoplayer2.Format;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 class Utils {
     public static int dpToPx(int dp) {
@@ -31,7 +56,7 @@ class Utils {
     }
 
     public static boolean fileExists(final Context context, final Uri uri) {
-        if ("file".equals(uri.getScheme())) {
+        if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
             final File file = new File(uri.getPath());
             return file.exists();
         } else {
@@ -182,6 +207,7 @@ class Utils {
         }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     public static void setOrientation(Activity activity, Orientation orientation) {
         switch (orientation) {
             case VIDEO:
@@ -227,6 +253,13 @@ class Utils {
         }
     }
 
+    public static Rational getRational(final Format format) {
+        if (isRotated(format))
+            return new Rational(format.height, format.width);
+        else
+            return new Rational(format.width, format.height);
+    }
+
     public static String formatMilis(long time) {
         final int totalSeconds = Math.abs((int) time / 1000);
         final int seconds = totalSeconds % 60;
@@ -249,12 +282,15 @@ class Utils {
         }
     }
 
-    public static void setViewParams(final View view, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, int marginLeft, int marginTop, int marginRight, int marginBottom) {
-        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-
+    public static void setViewMargins(final View view, int marginLeft, int marginTop, int marginRight, int marginBottom) {
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
         layoutParams.setMargins(marginLeft, marginTop, marginRight, marginBottom);
         view.setLayoutParams(layoutParams);
+    }
+
+    public static void setViewParams(final View view, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, int marginLeft, int marginTop, int marginRight, int marginBottom) {
+        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        setViewMargins(view, marginLeft, marginTop, marginRight, marginBottom);
     }
 
     public static boolean isDeletable(final Context context, final Uri uri) {
@@ -269,6 +305,16 @@ class Utils {
                         }
                     }
                 }
+            } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    boolean hasPermission = context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED;
+                    if (!hasPermission) {
+                        return false;
+                    }
+                }
+                final File file = new File(uri.getSchemeSpecificPart());
+                return file.canWrite();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,8 +322,186 @@ class Utils {
         return false;
     }
 
-    public static boolean isSupportedUri(final Uri uri) {
+    public static boolean isSupportedNetworkUri(final Uri uri) {
         final String scheme = uri.getScheme();
         return scheme.startsWith("http") || scheme.equals("rtsp");
+    }
+
+    public static boolean isTvBox(Context context) {
+        // TV for sure
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
+        if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
+            return true;
+        }
+
+        // Android box (non Android TV) or phone connected to external display (desktop mode)
+
+        if (Build.VERSION.SDK_INT < 29) {
+            // Most likely not a box
+            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
+                return false;
+            }
+
+            // Missing Files app (DocumentsUI) means box
+            // Some boxes have non functional app or stub (!)
+            final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("video/*");
+            if (intent.resolveActivity(context.getPackageManager()) == null) {
+                return true;
+            }
+        }
+
+        // Default: No TV - use SAF
+        return false;
+    }
+
+    public static int normRate(float rate) {
+        return (int)(rate * 100f);
+    }
+
+    public static boolean switchFrameRate(final Activity activity, final float frameRateExo, final Uri uri) {
+        if (!Utils.isTvBox(activity))
+            return false;
+
+        float frameRate = Format.NO_VALUE;
+
+        // preferredDisplayModeId only available on SDK 23+
+        // ExoPlayer already uses Surface.setFrameRate() on Android 11+ but may not detect actual video frame rate
+        if (Build.VERSION.SDK_INT >= 23 && (Build.VERSION.SDK_INT < 30 || (frameRateExo == Format.NO_VALUE))) {
+            String path;
+            if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+                path = FFmpegKitConfig.getSafParameterForRead(activity, uri);
+            } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+                // TODO: FFprobeKit doesn't accept encoded uri (like %20) (?!)
+                path = uri.getSchemeSpecificPart();
+            } else {
+                path = uri.toString();
+            }
+            // Use ffprobe as ExoPlayer doesn't detect video frame rate for lots of videos
+            // and has different precision than ffprobe (so do not mix that)
+            MediaInformationSession mediaInformationSession = FFprobeKit.getMediaInformation(path);
+            MediaInformation mediaInformation = mediaInformationSession.getMediaInformation();
+            if (mediaInformation == null)
+                return false;
+            List<StreamInformation> streamInformations = mediaInformation.getStreams();
+            for (StreamInformation streamInformation : streamInformations) {
+                if (streamInformation.getType().equals("video")) {
+                    String averageFrameRate = streamInformation.getAverageFrameRate();
+                    if (averageFrameRate.contains("/")) {
+                        String[] vals = averageFrameRate.split("/");
+                        frameRate = Float.parseFloat(vals[0]) / Float.parseFloat(vals[1]);
+                        break;
+                    }
+                }
+            }
+
+            if (BuildConfig.DEBUG)
+                Toast.makeText(activity, "Video frameRate: " + frameRate, Toast.LENGTH_LONG).show();
+
+            if (frameRate > 0) {
+                Display display = activity.getWindow().getDecorView().getDisplay();
+                Display.Mode[] supportedModes = display.getSupportedModes();
+                Display.Mode activeMode = display.getMode();
+
+                if (supportedModes.length > 1) {
+                    // Refresh rate >= video FPS
+                    List<Display.Mode> modesHigh = new ArrayList<>();
+                    // Max refresh rate
+                    Display.Mode modeTop = activeMode;
+                    int modesResolutionCount = 0;
+
+                    // Filter only resolutions same as current
+                    for (Display.Mode mode : supportedModes) {
+                        if (mode.getPhysicalWidth() == activeMode.getPhysicalWidth() &&
+                                mode.getPhysicalHeight() == activeMode.getPhysicalHeight()) {
+                            modesResolutionCount++;
+
+                            if (normRate(mode.getRefreshRate()) >= normRate(frameRate))
+                                modesHigh.add(mode);
+
+                            if (normRate(mode.getRefreshRate()) > normRate(modeTop.getRefreshRate()))
+                                modeTop = mode;
+                        }
+                    }
+
+                    if (modesResolutionCount > 1) {
+                        Display.Mode modeBest = null;
+
+                        for (Display.Mode mode : modesHigh) {
+                            if (normRate(mode.getRefreshRate()) % normRate(frameRate) <= 0.0001f) {
+                                if (modeBest == null || normRate(mode.getRefreshRate()) > normRate(modeBest.getRefreshRate())) {
+                                    modeBest = mode;
+                                }
+                            }
+                        }
+
+                        Window window = activity.getWindow();
+                        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+                        if (modeBest == null)
+                            modeBest = modeTop;
+
+                        final boolean switchingModes = !(modeBest.getModeId() == activeMode.getModeId());
+                        if (switchingModes) {
+                            layoutParams.preferredDisplayModeId = modeBest.getModeId();
+                            window.setAttributes(layoutParams);
+                        }
+                        if (BuildConfig.DEBUG)
+                            Toast.makeText(activity, "Video frameRate: " + frameRate + "\nDisplay refreshRate: " + modeBest.getRefreshRate(), Toast.LENGTH_LONG).show();
+                        return switchingModes;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean alternativeChooser(PlayerActivity activity, Uri initialUri, boolean video) {
+        String startPath;
+        if (initialUri != null && (new File(initialUri.getSchemeSpecificPart())).exists()) {
+            startPath = initialUri.getSchemeSpecificPart();
+        } else {
+            startPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        }
+
+        final String[] suffixes = (video ? new String[] { "3gp", "m4v", "mkv", "mov", "mp4", "webm" } :
+                new String[] { "srt", "ssa", "ass", "vtt", "ttml", "dfxp", "xml" });
+
+        ChooserDialog chooserDialog = new ChooserDialog(activity)
+                .withStartFile(startPath)
+                .withFilter(false, false, suffixes)
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String path, File pathFile) {
+                        activity.releasePlayer();
+                        Uri uri = DocumentFile.fromFile(pathFile).getUri();
+                        if (video) {
+                            activity.mPrefs.setPersistent(true);
+                            activity.mPrefs.updateMedia(activity, uri, null);
+                            activity.searchSubtitles();
+                        } else {
+                            // Convert subtitles to UTF-8 if necessary
+                            SubtitleUtils.clearCache(activity);
+                            uri = SubtitleUtils.convertToUTF(activity, uri);
+
+                            activity.mPrefs.updateSubtitle(uri);
+                        }
+                        PlayerActivity.focusPlay = true;
+                        activity.initializePlayer();
+                    }
+                })
+                // to handle the back key pressed or clicked outside the dialog:
+                .withOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.cancel(); // MUST have
+                    }
+                });
+        chooserDialog
+                .withOnBackPressedListener(dialog -> chooserDialog.goBack())
+                .withOnLastBackPressedListener(dialog -> dialog.cancel());
+        chooserDialog.build().show();
+
+        return true;
     }
 }
