@@ -1,0 +1,1 @@
+Bluetooth gecikmesi olmayan ve çeşitli kod çözücü bileşenlerini destekleyen açık kaynaklı video oynatıcı

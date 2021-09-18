@@ -1,0 +1,30 @@
+ExoPlayer kütüphanesine dayalı Android video oynatıcı. Tüm ses biçimleri etkinleştirilmiş ExoPlayer'ın FFmpeg uzantısını kullanır (AC3, EAC3, DTS, DTS HD, TrueHD vb. gibi özel biçimleri bile işleyebilir).
+
+Bluetooth kulaklık/hoparlör kullanırken sesi video akışıyla düzgün bir şekilde eşzamanlar.
+
+Desteklenen biçimler
+
+ * Ses: Vorbis, Opus, FLAC, ALAC, PCM/WAVE (μ-law, A-law), MP1, MP2, MP3, AMR (NB, WB), AAC (LC, ELD, HE; Android 9+ üzerinde xHE ), AC-3, E-AC-3, DTS, DTS-HD, TrueHD
+ * Video: H.263, H.264 AVC (Temel Profil; Android 6+ üzerinde Ana Profil), H.265 HEVC, MPEG-4 SP, VP8, VP9, AV1
+ * Konteynerler: MP4, MOV, WebM, MKV, Ogg, MPEG-TS, MPEG-PS, FLV
+ * Akış: DASH, HLS, SmoothStreaming, RTSP
+ * Alt yazılar: SRT, SSA, ASS, TTML, VTT
+
+Uyumlu/desteklenen donanımda HDR (HDR10+ ve Dolby Vision) video oynatma.
+
+Özellikleri
+
+ * Ses/alt yazı parçası seçimi
+ * Oynatma hızı denetimi
+ * Hızlıca aramak için yatay kaydırma ve iki kez dokunma
+ * Parlaklığı (sol) / ses seviyesini (sağ) değiştirmek için dikey kaydırma
+ * Yakınlaştırmak için sıkıştır (Android 7+)
+ * Android 8+ üzerinde PiP (Resim içinde Resim) (Android 11+ üzerinde yeniden boyutlandırılabilir)
+ * Yeniden boyutlandır (sığdır/kırp)
+ * Ses artırma
+ * Android TV/kutularda otomatik kare hızı eşleştirme (Android 6+)
+ * Oynatma sonrası işlemler (dosyayı sil/sonrakine atla)
+ * Dokunma kilidi (uzun dokunma)
+ * Reklam, izleme veya aşırı izin yok
+
+Harici (gömülü olmayan) alt yazıları yüklemek için alt çubuktaki dosya açma işlemine uzun basın. Bunu ilk yaptığınızda, harici alt yazıların otomatik olarak yüklenmesini sağlamak için kök video klasörünü seçmeniz istenecektir.

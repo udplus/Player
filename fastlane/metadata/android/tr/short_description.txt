@@ -1,0 +1,1 @@
+ExoPlayer kütüphanesine dayalı basit bir video oynatıcı
