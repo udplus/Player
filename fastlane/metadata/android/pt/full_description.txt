@@ -1,0 +1,30 @@
+Reprodutor de vídeo Android baseado na biblioteca do ExoPlayer. Usa a extensão FFmpeg do ExoPlayer com todos os formatos de áudio dele ativados (pode lidar até com formatos especiais como AC3, EAC3, DTS, DTS HD, TrueHD etc.).
+
+Sincroniza o áudio corretamente com a faixa de vídeo ao usar fones de ouvido/altifalantes Bluetooth.
+
+Formatos suportados
+
+ * Audio: Vorbis, Opus, FLAC, ALAC, PCM/WAVE (μ-law, A-law), MP1, MP2, MP3, AMR (NB, WB), AAC (LC, ELD, HE; xHE no Android 9+), AC-3, E-AC-3, DTS, DTS-HD, TrueHD
+ * Vídeo: H.263, H.264 AVC (Perfil de base; Perfil principal no Android 6+), H.265 HEVC, MPEG-4 SP, VP8, VP9, AV1
+ * Contentores: MP4, MOV, WebM, MKV, Ogg, MPEG-TS, MPEG-PS, FLV
+ * Streaming: DASH, HLS, SmoothStreaming, RTSP
+ * Legendas: SRT, SSA, ASS, TTML, VTT
+
+Reprodução de vídeo HDR (HDR10+ e Dolby Vision) em hardware compatível/suportado.
+
+Características
+
+ * Seleção de faixas de áudio/legenda
+ * Controle da velocidade de reprodução
+ * Deslizar horizontal e toque duplo para procurar rapidamente
+ * Deslizar vertical para mudar o brilho (esquerda) / volume (direita)
+ * Apertar para ampliar (Android 7+)
+ * PiP (imagem na imagem) no Android 8+ (redimensionável no Android 11+)
+ * Redimensionar (ajustar/cortar)
+ * Aumento de volume
+ * Correspondência automática de frame rate no Android TV/boxes (Android 6+)
+ * Ações pós-playback (apagar ficheiro/passar para o próximo)
+ * Touch lock (tocar longo)
+ * Sem anúncios, rastreamento ou permissões excessivas
+
+Para carregar legendas externas (não integradas), pressione durante muito tempo a ação de abertura do ficheiro na barra inferior.À primeira vez, ser-lhe-á oferecido para selecionar a pasta de vídeo raiz para permitir o carregamento automático das legendas externas.
