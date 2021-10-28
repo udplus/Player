@@ -34,4 +34,5 @@
     <string name="button_rotate">Okreni</string>
     <string name="pref_file_access">Pristup datotekama</string>
     <string name="pref_file_access_auto">Automatski</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
