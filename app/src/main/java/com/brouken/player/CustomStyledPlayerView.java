@@ -14,11 +14,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.core.view.GestureDetectorCompat;
-
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.SeekParameters;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.StyledPlayerView;
+import androidx.media3.common.C;
+import androidx.media3.exoplayer.SeekParameters;
+import androidx.media3.ui.AspectRatioFrameLayout;
+import androidx.media3.ui.StyledPlayerView;
 
 import java.util.Collections;
 

@@ -43,22 +43,22 @@ android {
 }
 
 dependencies {
-    def exoplayerVersion = '2.15.1'
-    implementation("com.google.android.exoplayer:exoplayer-common:$exoplayerVersion") {
-        exclude group: "com.google.android.exoplayer", module: "exoplayer-extractor"
+    def media3_version = '1.0.0-alpha01'
+    implementation "androidx.media3:media3-session:$media3_version"
+    implementation "androidx.media3:media3-datasource:$media3_version"
+    implementation "androidx.media3:media3-decoder:$media3_version"
+    implementation "androidx.media3:media3-common:$media3_version"
+    implementation("androidx.media3:media3-exoplayer-dash:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
     }
-    implementation "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
-    implementation("com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion") {
-        exclude group: "com.google.android.exoplayer", module: "exoplayer-core"
+    implementation("androidx.media3:media3-exoplayer-hls:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
     }
-    implementation("com.google.android.exoplayer:exoplayer-hls:$exoplayerVersion") {
-        exclude group: "com.google.android.exoplayer", module: "exoplayer-core"
+    implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
     }
-    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayerVersion") {
-        exclude group: "com.google.android.exoplayer", module: "exoplayer-core"
-    }
-    implementation("com.google.android.exoplayer:exoplayer-rtsp:$exoplayerVersion") {
-        exclude group: "com.google.android.exoplayer", module: "exoplayer-core"
+    implementation("androidx.media3:media3-exoplayer-rtsp:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
     }
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
     implementation 'com.google.android.material:material:1.4.0'
@@ -69,6 +69,5 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation project(path: ':doubletapplayerview')
     implementation project(path: ':android-file-chooser')
-    implementation fileTree(dir: "libs", include: ["extension-*.aar"])
-    implementation fileTree(dir: "libs", include: ["library-*.aar"])
+    implementation fileTree(dir: "libs", include: ["lib-*.aar"])
 }

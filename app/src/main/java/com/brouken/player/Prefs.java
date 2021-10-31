@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import androidx.media3.ui.AspectRatioFrameLayout;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
