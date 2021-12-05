@@ -37,4 +37,5 @@
     <string name="mediastore_empty">Aucun fichier vidéo indexé n\'a été trouvé. Pour accéder aux fichiers vidéo dans le stockage donné, activez l\'analyse automatique des médias dans les paramètres du système.</string>
     <string name="pref_shortcuts_header">Raccourcis</string>
     <string name="pref_captioning_preferences">Préférences en matière de sous-titrage</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
