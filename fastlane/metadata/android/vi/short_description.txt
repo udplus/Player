@@ -1,0 +1,1 @@
+Trình phát video đơn giản dựa trên thư viện ExoPlayer

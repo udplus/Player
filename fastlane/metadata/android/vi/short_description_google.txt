@@ -1,0 +1,1 @@
+Trình phát video mã nguồn mở không có độ trễ Bluetooth và hỗ trợ nhiều codec khác nhau

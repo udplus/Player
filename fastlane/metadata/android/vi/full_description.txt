@@ -1,0 +1,30 @@
+Trình phát video Android dựa trên thư viện ExoPlayer. Nó sử dụng phần mở rộng FFmpeg của ExoPlayer với tất cả các định dạng âm thanh được kích hoạt (nó có thể xử lý ngay cả các định dạng đặc biệt như AC3, EAC3, DTS, DTS HD, TrueHD, v.v.). 
+ 
+Nó đồng bộ hóa âm thanh với đoạn video khi sử dụng tai nghe / loa Bluetooth. 
+ 
+Các định dạng được hỗ trợ 
+ 
+ * Âm thanh: Vorbis, Opus, FLAC, ALAC, PCM / WAVE (μ-law, A-law), MP1, MP2, MP3, AMR (NB, WB), AAC (LC, ELD, HE; xHE trên Android 9+ ), AC-3, E-AC-3, DTS, DTS-HD, TrueHD 
+ * Video: H.263, H.264 AVC (Cấu hình cơ bản; Cấu hình chính trên Android 6+), H.265 HEVC, MPEG-4 SP, VP8, VP9, AV1 
+ * Định dạng lưu trữ kỹ thuật số: MP4, MOV, WebM, MKV, Ogg, MPEG-TS, MPEG-PS, FLV
+ * Phát trực tuyến: DASH, HLS,SmoothStreaming, RTSP 
+* Phụ đề: SRT, SSA, ASS, TTML, VTT 
+ 
+Phát lại video HDR (HDR10 + và Dolby Vision) trên phần cứng tương thích / được hỗ trợ. 
+ 
+Tính năng 
+
+ * Lựa chọn phụ đề / âm thanh
+ * Kiểm soát tốc độ phát
+ * Vuốt ngang và nhấn đúp để tua
+ * Vuốt dọc để thay đổi độ sáng (trái) / âm lượng (phải)
+ * Chụm để thu phóng (Android 7+)
+ * PiP (Hình trong Hình) trên Android 8+ (có thể thay đổi kích thước trên Android 11+)
+ * Thay đổi kích thước (vừa vặn / cắt xén)
+ * Tăng âm lượng
+ * Tự động khớp tốc độ khung hình trên Android TV / box (Android 6+)
+ * Các hành động sau khi phát (xóa tệp / chuyển sang tiếp theo)
+ * Khóa cảm ứng (chạm lâu)
+ * Không có quảng cáo, theo dõi hoặc cho phép các quyền nhạy cảm 
+ 
+Để tải phụ đề bên ngoài (không có sẵn), hãy nhấn và giữ hành động mở tệp ở thanh dưới cùng. Lần đầu tiên làm điều đó, bạn sẽ được cung cấp chọn thư mục video gốc để kích hoạt tính năng tự động tải phụ đề bên ngoài.
