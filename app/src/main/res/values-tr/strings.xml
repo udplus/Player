@@ -37,4 +37,5 @@
     <string name="mediastore_empty">Dizine alınmış video dosyası bulunamadı. Belirli depolama alanındaki video dosyalarına erişmek için sistem ayarlarında otomatik ortam taramasını etkinleştirin.</string>
     <string name="pref_captioning_preferences">Alt yazı tercihleri</string>
     <string name="pref_shortcuts_header">Kısayollar</string>
+    <string name="app_name" translatable="false"></string>
 </resources>
