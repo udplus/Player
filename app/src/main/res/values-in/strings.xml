@@ -28,4 +28,14 @@
     <string name="pref_repeat_toggle">Ulangi toggle</string>
     <string name="pref_repeat_toggle_summary">Kendali tambahan untuk mengaktifkan video loop tanpa batas (memerlukan restart aplikasi)</string>
     <string name="shortcut_videos">Video</string>
+    <string name="button_rotate"></string>
+    <string name="button_open"></string>
+    <string name="pref_captioning_preferences"></string>
+    <string name="pref_file_access_auto"></string>
+    <string name="button_pip"></string>
+    <string name="pref_file_access"></string>
+    <string name="pref_shortcuts_header"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="button_crop"></string>
+    <string name="mediastore_empty"></string>
 </resources>
