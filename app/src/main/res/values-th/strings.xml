@@ -14,4 +14,28 @@
     <string name="request_scope">ในการโหลดคำบรรยายภายนอกโดยอัตโนมัติ หรือ เปิดใช้งานการข้ามไปยังไฟล์ถัดไปในไดเร็กทอรี ให้ %s เข้าถึงโฟลเดอร์นอกสุดที่มีวิดีโอของคุณ (เช่น ภาพยนตร์)</string>
     <string name="shortcut_videos">วิดีโอ</string>
     <string name="app_name" translatable="false"></string>
+    <string name="pref_general_header"></string>
+    <string name="pref_captioning_preferences"></string>
+    <string name="button_rotate"></string>
+    <string name="pref_framerate_matching_on"></string>
+    <string name="pref_file_access"></string>
+    <string name="pref_tunneling_summary"></string>
+    <string name="button_crop"></string>
+    <string name="button_pip"></string>
+    <string name="button_open"></string>
+    <string name="pref_shortcuts_header"></string>
+    <string name="pref_repeat_toggle"></string>
+    <string name="pref_framerate_matching"></string>
+    <string name="pref_file_access_auto"></string>
+    <string name="pref_title"></string>
+    <string name="pref_framerate_matching_off"></string>
+    <string name="pref_tunneling"></string>
+    <string name="pref_auto_pip"></string>
+    <string name="pref_auto_pip_on"></string>
+    <string name="pref_auto_pip_off"></string>
+    <string name="pref_skip_silence"></string>
+    <string name="pref_skip_silence_on"></string>
+    <string name="pref_skip_silence_off"></string>
+    <string name="pref_repeat_toggle_summary"></string>
+    <string name="mediastore_empty"></string>
 </resources>
