@@ -33,4 +33,9 @@
     <string name="button_rotate">Повернуть</string>
     <string name="button_pip">Картинка в картинке</string>
     <string name="app_name" translatable="false"></string>
+    <string name="pref_file_access_auto"></string>
+    <string name="mediastore_empty"></string>
+    <string name="pref_file_access"></string>
+    <string name="pref_captioning_preferences"></string>
+    <string name="pref_shortcuts_header"></string>
 </resources>
