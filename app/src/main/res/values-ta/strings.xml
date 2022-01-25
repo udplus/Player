@@ -28,4 +28,14 @@
     <string name="pref_skip_silence_on">ஆடியோ ஸ்ட்ரீமில் அமைதியுடன் பகுதிகளைத் தவிர்க்கவும்</string>
     <string name="pref_repeat_toggle_summary">காலவரையின்றி லூப் வீடியோவை அனுமதிக்க கூடுதல் கட்டுப்பாடு (பயன்பாட்டை மறுதொடக்கம் தேவை)</string>
     <string name="pref_framerate_matching_on">வீடியோ பிரேம் வீதத்துடன் பொருந்த காட்சி புதுப்பிப்பு வீதத்தை மாற்றவும்</string>
+    <string name="pref_shortcuts_header"></string>
+    <string name="pref_file_access_auto"></string>
+    <string name="mediastore_empty"></string>
+    <string name="video_orientation_video"></string>
+    <string name="pref_file_access"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="video_resize_crop"></string>
+    <string name="pref_framerate_matching"></string>
+    <string name="pref_auto_pip"></string>
+    <string name="pref_captioning_preferences"></string>
 </resources>
