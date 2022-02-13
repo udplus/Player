@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkPreview "Tiramisu"
     ndkVersion '21.4.7075529'
 
     defaultConfig {
         applicationId "com.brouken.player"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkPreview "Tiramisu"
         versionCode 100
         versionName "0.100"
         archivesBaseName = "Just.Player.v${versionName}"
