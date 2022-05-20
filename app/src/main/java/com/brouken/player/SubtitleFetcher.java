@@ -30,6 +30,7 @@ class SubtitleFetcher {
     private Uri subtitleUri;
 
     public SubtitleFetcher(PlayerActivity activity, LinkedHashMap<Uri, Boolean> urls) {
+        // fetch
         this.activity = activity;
         this.urls = urls;
     }
